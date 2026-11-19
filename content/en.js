@@ -6,6 +6,8 @@ window.CONTENT.en = {
   title: "Daniil Filimonov — robotics researcher & engineer",
   nav: { home: "home", cv: "cv", experience: "experience", projects: "projects", consulting: "consulting", mentorship: "mentorship" },
   ui: {
+    shotAlt: "screenshot of the website",
+    linkedin: "LinkedIn", contactTitle: "contact", detailsSoon: "details coming soon",
     dark: "dark", light: "light", photoSoon: "photo coming soon",
     sheet: "Sheet", pitch: "Pitch", fig: "Fig.", alt: "alt", summit: "summit", drawn: "Drawn by", rev: "Rev", role: "Robotics · NYU", detail: "Detail", clips: { slope: "slope test", step: "step climbing", swim: "swimming", climb: "wall climbing", walk: "walking gait", demo: "terrain demo", drop: "drop test" },
     theme: "Switch theme", downloadCv: "Download CV (PDF)", email: "Email me", watch: "play", open: "Open",
@@ -16,14 +18,15 @@ window.CONTENT.en = {
   home: {
     kicker: "robots that crawl, climb, roll and survive a fall",
     lead: "PhD student in Mechanical Engineering at **New York University**. I design, prototype and control unconventional mobile robots — from first sketch to a machine that works on real terrain.",
-    sub: "Open to **research internships** and **tech consulting** projects.",
+    sub: "Open to **research**, **tech industry** and **consulting** internships.",
     cta: [
       { to: "experience", label: "Research experience" },
-      { to: "consulting", label: "Consulting" },
+      { to: "projects", label: "Projects" },
       { to: "mentorship", label: "Mentorship" }
     ],
     shelfTitle: "the robots",
-    shelf: { ciri: "CIRI — claws & climbing", worma: "WorMa — amphibious", flexiv: "FLEXIV — shape-shifting track", tensegrity: "Tensegrity — drops from height" },
+    shelf: { ciri: "CIRI — climbing robot", worma: "WorMa — amphibious", flexiv: "FLEXIV — shape-shifting track", tensegrity: "Tensegrity — drops from height" },
+    // ARCHIVED 2026-11-19: the numbers grid is not rendered (see R.home). Kept here to bring back later.
     numbersTitle: "in numbers",
     numbers: [
       { n: "1.5", u: "months", t: "CIRI: from idea to a climbing prototype" },
@@ -35,9 +38,9 @@ window.CONTENT.en = {
     ],
     tracksTitle: "what I am looking for",
     tracks: [
-      { to: "experience", h: "Research internships", p: "Mechanism design, locomotion, soft and bio-inspired robots. Three labs, three countries, three publications." },
-      { to: "consulting", h: "Tech consulting", p: "Rapid hardware prototyping, embedded systems and telemetry — the same toolkit, pointed at your problem." },
-      { to: "mentorship", h: "Mentorship", p: "Robotics education, research internships abroad, grant applications." }
+      { to: "experience", h: "Research internships", p: "Mechanism design, locomotion, soft and bio-inspired robots. Research at NYU, EPFL and Nazarbayev University, three publications." },
+      { to: "projects", h: "Tech industry internships", p: "Hardware from CAD to a working prototype: Fusion 360, SOLIDWORKS, 3D printing, ESP32 / Raspberry Pi, C++ and Python." },
+      { to: "projects", h: "Consulting internships", p: "Taking a hardware idea to a prototype that works, quickly — and building tools teams adopt, like premacontroller." }
     ]
   },
 
@@ -50,8 +53,8 @@ window.CONTENT.en = {
     ],
     pubsTitle: "Selected publications",
     pubs: [
-      { authors: "**Filimonov, D.**, Obayashi, N.", title: "WorMa: An Undulatory Robot With Center of Mass Regulation via Internal Fluid Redistribution for Amphibious Locomotion.", venue: "Advanced Robotics Research, 2026", note: "" },
-      { authors: "Kim, S.¹, **Filimonov, D.**¹, Hughes, J.", title: "FLEXIV: Adaptive Locomotion via Morphological Changes in a Flexible Track Vehicle.", venue: "IEEE Robotics & Automation Magazine, 2025", note: "¹Equal contribution. Oral and poster presenter at IROS 2025. Invention Disclosure EPFL TTO, 6.2604" },
+      { authors: "**Filimonov, D.**, Obayashi, N.", url: "https://advanced.onlinelibrary.wiley.com/doi/10.1002/adrr.70163", title: "WorMa: An Undulatory Robot With Center of Mass Regulation via Internal Fluid Redistribution for Amphibious Locomotion.", venue: "Advanced Robotics Research, 2026", note: "" },
+      { authors: "Kim, S.¹, **Filimonov, D.**¹, Hughes, J.", url: "https://ieeexplore.ieee.org/document/11075546", title: "FLEXIV: Adaptive Locomotion via Morphological Changes in a Flexible Track Vehicle.", venue: "IEEE Robotics & Automation Magazine, 2025", note: "¹Equal contribution. Oral and poster presenter at IROS 2025. Invention Disclosure EPFL TTO, 6.2604" },
       { authors: "**Filimonov, D.**, Zhakatayev, A., Varol, H.A.", title: "A Tensegrity Hybrid Mobile Robot with Mechanical Impact Resistance.", venue: "IECON 2024 Conference, Chicago, USA, 2024", note: "Oral presenter" }
     ],
     honorsTitle: "Honors, fellowships & service",
@@ -78,7 +81,7 @@ window.CONTENT.en = {
     h: "Research experience",
     jobs: [
       { org: "PREMA Lab, NYU", role: "Research Assistant", pi: "Professor Nana Obayashi", when: "Feb 2026 – Present", items: [
-        "Spearheaded the end-to-end design and rapid prototyping of **WorMa** (amphibious undulatory robot) and **CIRI** (cat-inspired retractable claw mechanism) in 3.5 and 1.5 months respectively, achieving 19.5° slope climbing and 15 cm step clearance",
+        "Spearheaded the end-to-end design and rapid prototyping of **WorMa** (amphibious undulatory robot) and **CIRI** (climbing robot) in 3.5 and 1.5 months respectively, achieving 19.5° slope climbing and 15 cm step clearance",
         "Architected and deployed **premacontroller**, a lab-wide WiFi telemetry and tuning dashboard adopted as the primary data-logging standard for microcontroller projects across the laboratory",
         "Designed open-loop control systems and Python simulations, utilizing internal fluid redistribution (shifting 28% of total body mass via peristaltic pumps) to reduce Cost of Transport by 33% on inclines",
         "Managed 3D printing infrastructure, equipment procurement, and lab budgets while mentoring two Master's students on soft robotics and wearable actuators" ] },
@@ -100,27 +103,32 @@ window.CONTENT.en = {
       { id: "worma", name: "WorMa", tag: "Amphibious undulatory robot · PREMA Lab, NYU · 2026",
         p: "An undulatory robot that regulates its centre of mass by pumping fluid inside its own body. Peristaltic pumps shift 28% of total body mass, cutting Cost of Transport by 33% on inclines. Designed and prototyped end-to-end in 3.5 months.",
         specs: ["19.5° slope", "15 cm step", "28% mass shifted", "−33% CoT", "land + water"],
-        pub: "Advanced Robotics Research, 2026" },
-      { id: "ciri", name: "CIRI", tag: "Cat-inspired retractable claw mechanism · PREMA Lab, NYU · 2026",
-        p: "A climbing robot with retractable claws modelled on a cat's paw. From concept to a working climbing prototype in 1.5 months.",
-        specs: ["retractable claws", "1.5 months to prototype"] },
+        pub: "Advanced Robotics Research, 2026",
+        links: [{ label: "paper", url: "https://advanced.onlinelibrary.wiley.com/doi/10.1002/adrr.70163" }] },
+      { id: "ciri", name: "CIRI", tag: "Climbing robot · PREMA Lab, NYU · 2026",
+        p: "A climbing robot. Details coming soon.",
+        specs: [] },
       { id: "flexiv", name: "FLEXIV", tag: "Flexible track vehicle · CREATE Lab, EPFL · 2024",
         p: "A caterpillar robot that changes its own shape: the wheelbase adjusts from 6 to 17.5 cm, morphing the track between circular and oblong. A gear-driven drive removed track slippage, and IMU-based terrain-adaptive control handles obstacles without any vision sensors.",
         specs: ["50° inclines", "38 cm drops", "6–17.5 cm wheelbase", "no vision"],
-        pub: "IEEE Robotics & Automation Magazine, 2025 · IROS 2025 oral · Invention Disclosure EPFL TTO" },
+        pub: "IEEE Robotics & Automation Magazine, 2025 · IROS 2025 oral · Invention Disclosure EPFL TTO",
+        links: [{ label: "paper", url: "https://ieeexplore.ieee.org/document/11075546" }] },
       { id: "tensegrity", name: "Tensegrity hybrid robot", tag: "Impact-resistant mobile robot · ISSAI, NU · 2022–2025",
         p: "A hybrid mobile robot built on tensegrity structures that survives mechanical impacts up to 16 g. Switchable wheeled and legged modes, full embedded stack on ESP32 / Raspberry Pi, and gyroscope-based orientation control for a 10 kg body in free fall.",
         specs: ["16 g impact", "10 kg", "wheeled ⇄ legged", "ESP32 + RPi"],
         pub: "IECON 2024, Chicago" },
-      { id: "prema", name: "premacontroller", tag: "WiFi telemetry & tuning dashboard · PREMA Lab, NYU",
-        p: "A lab-wide dashboard for live telemetry and parameter tuning over WiFi. Adopted as the primary data-logging standard for microcontroller projects across the laboratory.",
-        specs: ["WiFi telemetry", "live tuning", "lab standard"] },
+      { id: "prema", name: "premacontroller", tag: "ESP32 control & telemetry dashboard · PREMA Lab, NYU",
+        p: "An end-to-end setup for controlling and tuning ESP32 robots over WiFi. The robot describes its signals and settings, and the browser dashboard builds itself from that: live plots, sliders that change parameters on the robot in real time, recording to CSV, and Bluetooth gamepad control. Adopted as the data-logging standard for microcontroller projects across the lab. Available to anyone: the code is on GitHub and the dashboard runs in the browser with nothing to install.",
+        specs: ["ESP32 + PlatformIO", "WiFi / WebSocket", "live plots + tuning", "CSV logging", "gamepad"],
+        links: [{ label: "GitHub", url: "https://github.com/Prema-Lab/PremaController_ESP32" }, { label: "open the dashboard", url: "https://prema-lab.github.io/PremaController_Web/" }] },
       { id: "beyond", name: "Beyond Robotics", tag: "Free robotics education · Beyond Curriculum Foundation",
         p: "Headed a project funded by a $20,000 U.S. Embassy & Chevron grant: free robotics education materials in Kazakh and Russian.",
-        specs: ["$20,000 grant", "Kazakh + Russian", "open materials"] }
+        specs: ["$20,000 grant", "Kazakh + Russian", "open materials"],
+        links: [{ label: "robotics.bc-pf.org", url: "https://robotics.bc-pf.org/" }] }
     ]
   },
 
+  // ARCHIVED 2026-11-19: the consulting page is out of the nav (see ROUTES in js/app.js). Kept to bring back later.
   consulting: {
     h: "Tech consulting",
     intro: "I take hardware ideas from a sketch to a prototype that works outside the lab — quickly. The same process that produced a climbing robot in 1.5 months and an amphibious one in 3.5.",
@@ -149,13 +157,6 @@ window.CONTENT.en = {
       { h: "Mentoring graduate students", p: "Mentoring two Master's students at PREMA Lab on soft robotics and wearable actuators." },
       { h: "Beyond Robotics", p: "Headed the project and developed free robotics education materials in Kazakh and Russian (U.S. Embassy & Chevron grant, $20,000)." },
       { h: "Yessenov Foundation review committee", p: "Reviewed 40 applications for the Data Lab and Launch Pad programs." }
-    ],
-    topicsTitle: "what we can talk about",
-    topics: [
-      "Getting into research labs and internships abroad (Yessenov grant → EPFL, top 7% of applicants)",
-      "Writing grant proposals and applications",
-      "First robotics projects: mechanics, electronics, code",
-      "From a student project to a publication"
     ],
     cta: "Write to me"
   }

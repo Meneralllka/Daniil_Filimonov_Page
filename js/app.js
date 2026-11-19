@@ -2,9 +2,11 @@
 (function () {
   "use strict";
   var C = window.CONTENT, SP = window.SPRITES || {};
-  var ROUTES = ["home", "cv", "experience", "projects", "consulting", "mentorship"];
-  var EMAIL = ["df2789", "nyu.edu"].join("@"); // assembled here so the address is not sitting in the HTML for scrapers
-  var PHOTO = "";                              // set to "assets/photo.jpg" once the portrait is in that folder
+  var ROUTES = ["home", "cv", "experience", "projects", "mentorship"]; // "consulting" ARCHIVED 2026-11-19 — add it back here (after "projects") to restore the page
+  var EMAIL = ["df2789", "nyu.edu"].join("@"); // never written into the page: links carry data-mail and open mailto: only on click
+  var EMAIL_SHOWN = "df2789 at nyu dot edu";    // what visitors (and scrapers) see
+  var LINKEDIN = "https://www.linkedin.com/in/daniilfilimonov/";
+  var PHOTO = "assets/photo.jpg";               // "" shows the "photo coming soon" placeholder
   var CV_PDF = "assets/Daniil_Filimonov_CV.pdf";
 
   // which robot brings which page
@@ -13,8 +15,8 @@
     cv:         { kind: "run", sprite: "worma",  dir: "right", fps: 12, dur: 1700 },
     experience: { kind: "run", sprite: "flexiv", dir: "left",  fps: 16, dur: 1500 },
     projects:   { kind: "run", sprite: "ciri",   dir: "up",    fps: 14, dur: 1700 },
-    consulting: { kind: "run", sprite: "worma",  dir: "left",  fps: 12, dur: 1700 },
-    mentorship: { kind: "run", sprite: "flexiv", dir: "right", fps: 16, dur: 1500 }
+    mentorship: { kind: "run", sprite: "worma",  dir: "left",  fps: 12, dur: 1700 },
+    consulting: { kind: "run", sprite: "flexiv", dir: "right", fps: 16, dur: 1500 }  // archived page
   };
   // media per project id (language independent)
   var MEDIA = {
@@ -22,6 +24,11 @@
     ciri: [["climb", "ciri-climb"]],
     flexiv: [["demo", "flexiv"]],
     tensegrity: [["drop test", "tensegrity"]]
+  };
+  // projects without footage show a screenshot of their website instead (click opens the site)
+  var SHOTS = {
+    prema:  { src: "assets/shots/prema.jpg",  href: "https://prema-lab.github.io/PremaController_Web/" },
+    beyond: { src: "assets/shots/beyond.jpg", href: "https://robotics.bc-pf.org/" }
   };
 
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -48,20 +55,21 @@
       var me = '<figure class="me polaroid' + (PHOTO ? "" : " empty") + '">' + (PHOTO ? '<img src="' + PHOTO + '" alt="' + esc(t.name) + '">' : '<div class="ph">' + esc(t.ui.photoSoon) + "</div>") + "</figure>";
       return '<section class="hero"><div class="hero-text"><p class="kicker">' + esc(h.kicker) + "</p><h1>" + esc(t.name) + '</h1><p class="lead">' + md(h.lead) + '</p><p class="sub">' + md(h.sub) + "</p>" +
         '<div class="btns">' + h.cta.map(function (c, i) { return '<a class="btn' + (i ? "" : " primary") + '" href="#/' + c.to + '">' + esc(c.label) + "</a>"; }).join("") +
-        '<a class="btn" href="' + CV_PDF + '" download>' + esc(t.ui.downloadCv) + "</a></div></div>" + me + "</section>" +
+        '<a class="btn" href="' + CV_PDF + '" download>' + esc(t.ui.downloadCv) + "</a></div>" + contactRow(t) + "</div>" + me + "</section>" +
         "<h2>" + esc(h.shelfTitle) + '</h2><div class="shelf">' +
         [["ciri", "ciri-climb", " tall"], ["worma", "worma-slope", ""], ["flexiv", "flexiv", ""], ["tensegrity", "tensegrity", ""]].map(function (x) {
           return '<a class="bot" href="#/projects"><div class="stage"><div class="polaroid' + x[2] + '">' + video(x[1], "data-hover") + '</div></div><div class="cap">' + esc(h.shelf[x[0]]) + "</div></a>";
         }).join("") + "</div>" +
         '<p class="hint">↑ ' + esc(t.ui.hoverHint) + "</p>" +
-        "<h2>" + esc(h.numbersTitle) + '</h2><div class="nums">' + h.numbers.map(function (n) { return '<div class="num"><b>' + esc(n.n) + "</b><i>" + esc(n.u) + "</i><p>" + esc(n.t) + "</p></div>"; }).join("") + "</div>" +
+        // ARCHIVED 2026-11-19 — "in numbers" grid. To restore, put this line back:
+        // "<h2>" + esc(h.numbersTitle) + '</h2><div class="nums">' + h.numbers.map(function (n) { return '<div class="num"><b>' + esc(n.n) + "</b><i>" + esc(n.u) + "</i><p>" + esc(n.t) + "</p></div>"; }).join("") + "</div>" +
         "<h2>" + esc(h.tracksTitle) + '</h2><div class="cards">' + h.tracks.map(function (c) { return '<a class="card" href="#/' + c.to + '"><h3>' + esc(c.h) + "</h3><p>" + esc(c.p) + "</p></a>"; }).join("") + "</div>";
     },
     cv: function (t) {
       var c = t.cv;
       return "<h1>" + esc(c.h) + '</h1><div class="btns" style="margin-top:0"><a class="btn primary" href="' + CV_PDF + '" download>' + esc(t.ui.downloadCv) + "</a></div>" +
         "<h2>" + esc(c.educationTitle) + '</h2><ul class="rows">' + c.education.map(function (e) { return "<li><span>" + md(e.what) + '</span><span class="when">' + esc(e.when) + "</span></li>"; }).join("") + "</ul>" +
-        "<h2>" + esc(c.pubsTitle) + "</h2>" + c.pubs.map(function (p) { return '<div class="pub"><div>' + md(p.authors) + '</div><div class="t">' + esc(p.title) + '</div><div class="v">' + esc(p.venue) + "</div>" + (p.note ? '<div class="n">' + esc(p.note) + "</div>" : "") + "</div>"; }).join("") +
+        "<h2>" + esc(c.pubsTitle) + "</h2>" + c.pubs.map(function (p) { return '<div class="pub"><div>' + md(p.authors) + '</div><div class="t">' + (p.url ? '<a href="' + esc(p.url) + '" target="_blank" rel="noopener">' + esc(p.title) + " ↗</a>" : esc(p.title)) + '</div><div class="v">' + esc(p.venue) + "</div>" + (p.note ? '<div class="n">' + esc(p.note) + "</div>" : "") + "</div>"; }).join("") +
         "<h2>" + esc(c.honorsTitle) + "</h2>" + c.honors.map(function (h) { return "<h3>" + esc(h.h) + '</h3><div class="mono">' + esc(h.sub) + '</div><ul class="dots" style="margin-bottom:22px">' + h.items.map(function (i) { return "<li>" + md(i) + "</li>"; }).join("") + "</ul>"; }).join("") +
         "<h2>" + esc(c.skillsTitle) + '</h2><dl class="skills">' + c.skills.map(function (s) { return "<dt>" + esc(s.h) + "</dt><dd>" + esc(s.v) + "</dd>"; }).join("") + "</dl>";
     },
@@ -78,8 +86,11 @@
         if (m) {
           media = '<div class="polaroid">' + video(m[0][1], "data-auto") + "</div>" +
             (m.length > 1 ? '<div class="clips">' + m.map(function (c, i) { return '<button data-clip="' + c[1] + '" aria-pressed="' + (i === 0) + '">' + esc(c[0]) + "</button>"; }).join("") + "</div>" : "");
+        } else if (SHOTS[x.id]) {
+          media = '<a class="polaroid shot" href="' + SHOTS[x.id].href + '" target="_blank" rel="noopener"><img src="' + SHOTS[x.id].src + '" alt="' + esc(x.name) + " — " + esc(t.ui.shotAlt) + '" loading="lazy"></a>';
         } else media = '<div class="nomedia">' + esc(x.name) + "</div>";
-        return '<article class="proj' + (x.id === "ciri" ? " portrait" : "") + '" id="p-' + x.id + '"><div class="media">' + media + '</div><div><div class="tag">' + esc(x.tag) + "</div><h3>" + esc(x.name) + "</h3><p>" + esc(x.p) + '</p><ul class="chips">' + x.specs.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") + "</ul>" + (x.pub ? '<div class="pubnote">✎ ' + esc(x.pub) + "</div>" : "") + "</div></article>";
+        return '<article class="proj' + (x.id === "ciri" ? " portrait" : "") + '" id="p-' + x.id + '"><div class="media">' + media + '</div><div><div class="tag">' + esc(x.tag) + "</div><h3>" + esc(x.name) + "</h3><p>" + esc(x.p) + "</p>" + (x.specs && x.specs.length ? '<ul class="chips">' + x.specs.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") + "</ul>" : "") +
+          (x.links ? '<p class="plinks">' + x.links.map(function (l) { return '<a href="' + esc(l.url) + '" target="_blank" rel="noopener">↗ ' + esc(l.label) + "</a>"; }).join("") + "</p>" : "") + (x.pub ? '<div class="pubnote">✎ ' + esc(x.pub) + "</div>" : "") + "</div></article>";
       }).join("");
     },
     consulting: function (t) {
@@ -91,12 +102,17 @@
     mentorship: function (t) {
       var m = t.mentorship;
       return "<h1>" + esc(m.h) + '</h1><p class="lead">' + esc(m.intro) + "</p><h2>" + esc(m.itemsTitle) + '</h2><div class="cards">' +
-        m.items.map(function (s) { return '<div class="card"><h3>' + esc(s.h) + "</h3><p>" + esc(s.p) + "</p></div>"; }).join("") + "</div><h2>" + esc(m.topicsTitle) + '</h2><ul class="dots">' +
-        m.topics.map(function (i) { return "<li>" + md(i) + "</li>"; }).join("") + "</ul>" + cta(m.cta, t);
+        m.items.map(function (s) { return '<div class="card"><h3>' + esc(s.h) + "</h3><p>" + esc(s.p) + "</p></div>"; }).join("") + "</div>" + cta(m.cta, t);
     }
   };
   function cta(text, t) {
-    return '<div class="cta-box"><div class="big">' + esc(text) + '</div><a class="btn primary" href="mailto:' + EMAIL + '">' + esc(t.ui.email) + " · " + EMAIL + "</a></div>";
+    return '<div class="cta-box"><div class="big">' + esc(text) + '</div><div class="btns" style="margin:0">' +
+      '<a class="btn primary" href="#" data-mail>' + esc(t.ui.email) + " · " + EMAIL_SHOWN + "</a>" +
+      '<a class="btn" href="' + LINKEDIN + '" target="_blank" rel="noopener">' + esc(t.ui.linkedin) + " ↗</a></div></div>";
+  }
+  // small handwritten contact line (home hero)
+  function contactRow(t) {
+    return '<p class="contact"><a href="#" data-mail>✉ ' + EMAIL_SHOWN + '</a><a href="' + LINKEDIN + '" target="_blank" rel="noopener">↗ ' + esc(t.ui.linkedin) + "</a></p>";
   }
 
   /* ---------------- sprites ---------------- */
@@ -156,7 +172,7 @@
     $("#nav").innerHTML = ROUTES.map(function (r) { return '<a href="#/' + r + '"' + (r === current ? ' aria-current="page"' : "") + ">" + esc(t.nav[r]) + "</a>"; }).join("");
     document.querySelectorAll("#langs button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.lang === lang); });
     themeLabel();
-    $("#mail").href = "mailto:" + EMAIL; $("#mail").textContent = EMAIL;
+    $("#mail").textContent = EMAIL_SHOWN; $("#li").href = LINKEDIN;
     $("#footnote").textContent = t.ui.footer;
     document.documentElement.style.setProperty("--top-h", $(".top").offsetHeight + "px");
   }
@@ -231,6 +247,10 @@
   }
 
   /* ---------------- wiring ---------------- */
+  document.addEventListener("click", function (e) {   // spam-protected email: the real address only exists at click time
+    var a = e.target.closest("[data-mail]"); if (!a) return;
+    e.preventDefault(); location.href = "mailto:" + EMAIL;
+  });
   function routeFromHash() { var r = location.hash.replace(/^#\/?/, ""); return ROUTES.indexOf(r) >= 0 ? r : "home"; }
   window.addEventListener("hashchange", function () { var r = routeFromHash(); if (r !== current) navigate(r, true); });
   $("#langs").addEventListener("click", function (e) {
